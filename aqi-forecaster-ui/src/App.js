@@ -27,7 +27,7 @@ function App() {
 
     try {
       // 2. Send the message to our FastAPI backend API
-      const response = await fetch("https://aqi-forecaster-wlsq.onrender.com", {
+      const response = await fetch("https://aqi-forecaster-wlsq.onrender.com/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMessage })
