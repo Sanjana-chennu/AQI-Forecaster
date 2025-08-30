@@ -2,7 +2,8 @@
 
 This project is a complete, end-to-end AI application that provides real-time air quality (AQI) forecasts through a natural language chat interface. It combines a state-of-the-art deep learning model, a conversational AI agent, and a modern full-stack web architecture.
 
-![Evaluation Plot](evaluation_results_final.png)
+<img width="1094" height="471" alt="image" src="https://github.com/user-attachments/assets/b4b90be2-5c30-482d-8223-6110a621a029" />
+
 *(This plot shows the final LSTM model's predictions (red) against the actual pollution values (blue) on the unseen test set, demonstrating its ability to capture complex daily cycles.)*
 
 ---
