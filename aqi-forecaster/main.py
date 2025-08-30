@@ -20,8 +20,7 @@ print("Agent created successfully.")
 
 origins = [
     "http://localhost",
-    "http://localhost:3000",
-    "https://aqi-forecaster-ui.onrender.com" 
+    "http://localhost:3000"
 ]
 app.add_middleware(
     CORSMiddleware,
