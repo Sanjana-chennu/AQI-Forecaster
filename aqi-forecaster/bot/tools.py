@@ -27,10 +27,8 @@ def convert_pm25_to_aqi(pm25_value: float) -> int:
 # In bot/tools.py
 
 def get_forecast(horizon_hours: int) -> dict:
-    # ... (try/except block is the same) ...
  
     
-    # --- THIS IS THE FIX ---
     # The LangChain agent passes the input as a string. We must convert it to an integer.
     try:
         horizon_hours = int(horizon_hours)
@@ -48,7 +46,6 @@ def get_forecast(horizon_hours: int) -> dict:
     if not os.path.exists(weights_path):
         return {"error": "Multi-output model weights not found. Please train the model."}
 
-    # --- 1. Load Everything from the Checkpoint ---
     checkpoint = torch.load(weights_path, map_location=device,weights_only=False)
     model_config = checkpoint['model_config']
     df_columns = checkpoint['df_columns']
@@ -81,14 +78,11 @@ def get_forecast(horizon_hours: int) -> dict:
             predicted_targets_scaled = model(input_tensor).cpu().numpy().flatten()
             future_predictions_scaled.append(predicted_targets_scaled)
 
-            # --- Create the next input row ---
             # Start with a copy of the last known full row
             new_row_scaled = current_window_scaled[-1, :].copy()
             
-            # Find the indices of the columns we need to update
             target_indices = [df_columns.index(col) for col in target_columns]
             
-            # Replace the old values with our new predictions
             new_row_scaled[target_indices] = predicted_targets_scaled
             
             # Slide the window
@@ -108,10 +102,8 @@ def get_forecast(horizon_hours: int) -> dict:
     predictions_aqi = [convert_pm25_to_aqi(p) for p in predictions_pm25]
 
     # ... (Plotting and return logic is the same as before) ...
-    # (Just make sure the plot path is correct)
+
     plot_path = os.path.join(project_root, 'app', 'forecast_plot.png')
-    # ... rest of plotting and returning ...
-    # --- 6. Save Plot ---
     plot_path = os.path.join(project_root, 'app', 'forecast_plot.png')
     os.makedirs(os.path.dirname(plot_path), exist_ok=True)
     plt.figure(figsize=(10, 6)); plt.plot(range(1, horizon_hours + 1), predictions_aqi, marker='o', linestyle='-');
@@ -119,7 +111,6 @@ def get_forecast(horizon_hours: int) -> dict:
     plt.ylabel('Predicted AQI'); plt.grid(True); plt.savefig(plot_path); plt.close();
     print(f"Forecast plot saved to {plot_path}")
 
-    # --- 7. Return the Results ---
     pm25_list = [round(p, 2) for p in predictions_pm25.flatten().tolist()]
     print(f"Forecast complete. PM2.5: {pm25_list}, AQI: {predictions_aqi}")
     
