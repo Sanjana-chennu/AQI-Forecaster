@@ -24,10 +24,7 @@ print("Agent created successfully.")
 # --- 4. Add CORS Middleware ---
 # This is a security feature that allows your React front-end (on a different address)
 # to make requests to this back-end server.
-origins = [
-    "http://localhost",
-    "http://localhost:3000", # The default address for a React development server
-]
+origins = [ "*"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
