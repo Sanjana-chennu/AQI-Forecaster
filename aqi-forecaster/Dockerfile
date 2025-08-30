@@ -17,7 +17,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY core/ core/
 COPY bot/ bot/
 COPY main.py .
-COPY .env .
+
 
 # Stage 5: Expose Port
 # Tell Docker that the application inside this container will listen on port 8000.
