@@ -10,6 +10,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY core/ core/
 COPY bot/ bot/
 COPY main.py .
+COPY saved_models/ saved_models/
 
 
 
