@@ -27,7 +27,8 @@ The final model was the result of a rigorous, multi-stage experimental process d
 2.  **System Upgrade (Multi-Output LSTM):** To solve the "flat-line" problem, the architecture was re-engineered into a **multi-output system**. The core RNN chosen for this was the classic and powerful **LSTM (Long Short-Term Memory)**. The final production model is a **2-layer Stacked LSTM with Dropout**, which is highly effective at capturing long-term dependencies in the data.
 
 3.  **Stability and Optimization:** During testing, the powerful LSTM model showed signs of instability (predicting negative values). An architectural fix was implemented by adding a **ReLU  activation function** to the final layer, ensuring all predictions are physically plausible and making the model robust.
-  
+THIS DOC FOLLOWS THE JOURNEY OF THE TRAINING THE MODEL-
+https://docs.google.com/document/d/1urjKmjBLq7omXj52_XWXqU2dk04EKbJkPsQLS2LxWfE/edit?usp=sharing
 THE WEB-APPLICATION
 1.  **Frontend (`aqi-forecaster-ui`):** A **React** application that provides a polished chat interface. Its only job is to send user messages to the backend and display the responses.
 2.  **Backend (`aqi-forecaster`):** A **FastAPI** server that exposes a single `/chat` endpoint. It receives requests from the frontend and passes them to the LangChain agent.
