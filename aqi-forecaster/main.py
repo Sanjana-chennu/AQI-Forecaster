@@ -1,4 +1,4 @@
-# main.py
+
 
 import sys
 import os
@@ -12,7 +12,6 @@ from bot.agent import create_agent
 
 print("Initializing FastAPI server and LangChain agent...")
 app = FastAPI()
-# Create the agent executor ONCE when the server starts up.
 agent_executor = create_agent()
 print("Agent created successfully.")
 
@@ -30,11 +29,9 @@ app.add_middleware(
     allow_headers=["*"], # Allow all headers
 )
 
-# This ensures the frontend sends data in the correct format using Pydantic.
 class ChatRequest(BaseModel):
     message: str
 
-# --- 6. Define the main API endpoint for the chat ---
 @app.post("/chat")
 def handle_chat(request: ChatRequest):
     """

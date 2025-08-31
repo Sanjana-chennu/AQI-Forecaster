@@ -12,9 +12,6 @@ def load_and_clean_data(file_path):
     df['date'] = pd.to_datetime(df['date'])
     df.set_index('date', inplace=True)
     
-    # Converted the non-numerical date index into useful numerical features
-    # that the model can be trained on
-    # previously model didnt know the date context.
     df['hour'] = df.index.hour
     df['day_of_week'] = df.index.dayofweek  # Monday=0, Sunday=6
     df['month'] = df.index.month
@@ -32,10 +29,8 @@ def scale_and_create_sequences(df, train_split_ratio=0.8, window_size=48):
     # These are the features we want our model to predict for the next time step.
     target_columns = ['pollution', 'dew', 'temp', 'press', 'wnd_spd', 'snow', 'rain']
     
-    # All columns will be used as input features
     all_columns = df.columns
     
-    # Convert DataFrame to NumPy array
     data = df.values
 
     #Scaling in 0-1 range.
