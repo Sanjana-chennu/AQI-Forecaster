@@ -3,14 +3,12 @@ import sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import torch # <-- Import PyTorch
+import torch 
 from sklearn.preprocessing import MinMaxScaler
 
 
-# --- Add the project's root directory to the Python path ---
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# --- IMPORTANT: Import the NEW PyTorch model and the preprocessing functions ---
 from core.model import LSTMModel
 from core.preprocess import load_and_clean_data, scale_and_create_sequences
 
@@ -24,7 +22,7 @@ def convert_pm25_to_aqi(pm25_value: float) -> int:
     elif 150.5 <= pm25_value <= 250.4: return int(((300 - 201) / (250.4 - 150.5)) * (pm25_value - 150.5) + 201)
     else: return 500 # Simplified for brevity
 
-# In bot/tools.py
+
 
 def get_forecast(horizon_hours: int) -> dict:
  
@@ -33,9 +31,7 @@ def get_forecast(horizon_hours: int) -> dict:
     try:
         horizon_hours = int(horizon_hours)
     except (ValueError, TypeError):
-        # This will catch cases where the input is not a number (e.g., "twelve")
         return {"error": "Invalid input. Please provide a valid number of hours."}
-    # -----------------------
 
     print(f"--- Running Multi-Output PyTorch forecast for {horizon_hours} hours ---")
     
@@ -56,29 +52,24 @@ def get_forecast(horizon_hours: int) -> dict:
     scaler.scale_ = checkpoint['scaler_state']
     scaler.min_ = checkpoint['scaler_min']
 
-    # --- 2. Load the Model ---
     model = LSTMModel(**model_config).to(device)
     model.load_state_dict(checkpoint['model_state_dict'])
     model.eval()
 
-    # --- 3. Get the Last Known Window of Data ---
     data_path = os.path.join(project_root, 'data', 'LSTM-Multivariate_pollution.csv')
     df = load_and_clean_data(data_path)
     
     last_window_unscaled = df.tail(48).values # Get the last 48 hours
     current_window_scaled = scaler.transform(last_window_unscaled)
 
-    # --- 4. The New Multi-Output Recursive Prediction Loop ---
     future_predictions_scaled = []
     with torch.no_grad():
         for _ in range(horizon_hours):
             input_tensor = torch.from_numpy(current_window_scaled).float().unsqueeze(0).to(device)
             
-            # Predict the next time step's target features (e.g., the 7 values)
             predicted_targets_scaled = model(input_tensor).cpu().numpy().flatten()
             future_predictions_scaled.append(predicted_targets_scaled)
 
-            # Start with a copy of the last known full row
             new_row_scaled = current_window_scaled[-1, :].copy()
             
             target_indices = [df_columns.index(col) for col in target_columns]
@@ -88,7 +79,6 @@ def get_forecast(horizon_hours: int) -> dict:
             # Slide the window
             current_window_scaled = np.vstack([current_window_scaled[1:], new_row_scaled])
 
-    # --- 5. Inverse Transform and Finalize ---
     future_predictions_scaled = np.array(future_predictions_scaled)
     
     # Create a dummy array to inverse transform
@@ -101,7 +91,6 @@ def get_forecast(horizon_hours: int) -> dict:
     predictions_pm25 = predictions_df['pollution'].values
     predictions_aqi = [convert_pm25_to_aqi(p) for p in predictions_pm25]
 
-    # ... (Plotting and return logic is the same as before) ...
 
     plot_path = os.path.join(project_root, 'app', 'forecast_plot.png')
     plot_path = os.path.join(project_root, 'app', 'forecast_plot.png')

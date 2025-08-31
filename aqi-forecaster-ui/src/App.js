@@ -1,7 +1,7 @@
-// src/App.js
+
 
 import React, { useState, useEffect, useRef } from 'react';
-import './App.css'; // We will create this for styling
+import './App.css'; 
 
 function App() {
   const [messages, setMessages] = useState([
@@ -11,7 +11,6 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const chatBoxEndRef = useRef(null);
 
-  // Effect to automatically scroll to the bottom when new messages are added
   useEffect(() => {
     chatBoxEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
@@ -20,7 +19,6 @@ function App() {
     const userMessage = input.trim();
     if (!userMessage || isLoading) return;
 
-    // 1. Add user message to the chat and clear the input
     setMessages(prev => [...prev, { text: userMessage, sender: "user" }]);
     setInput("");
     setIsLoading(true);

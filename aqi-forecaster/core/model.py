@@ -17,8 +17,7 @@ class LSTMModel(nn.Module):
         # 2. The Final Fully-Connected Layer
         self.fc = nn.Linear(hidden_size, output_size)
 
-        # 3. The Activation Function Layer (for stability)
-        # This will prevent the model from predicting negative pollution values.
+    
         self.relu = nn.ReLU()
 
     def forward(self, x):
@@ -35,10 +34,8 @@ class LSTMModel(nn.Module):
         # Pass the output of the last time step through the fully connected layer
         out = self.fc(out[:, -1, :])
         
-        # --- THIS IS THE CRITICAL FIX ---
-        # Apply the ReLU activation function to the final output.
-        # This ensures the model's output can never be negative.
+    
         out = self.relu(out)
-        # -------------------------------
+ 
         
         return out

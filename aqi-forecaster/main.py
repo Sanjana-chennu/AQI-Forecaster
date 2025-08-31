@@ -43,7 +43,6 @@ def handle_chat(request: ChatRequest):
     """
     print(f"Received message from frontend: {request.message}")
     
-    # The core logic: run the agent with the user's input
     try:
         response = agent_executor.invoke({"input": request.message})
         bot_response = response.get('output', 'Sorry, I had trouble processing that request.')

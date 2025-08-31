@@ -51,14 +51,12 @@ def scale_and_create_sequences(df, train_split_ratio=0.8, window_size=48):
     target_indices=[df.columns.get_loc(col) for col in target_columns]
 
     #Sliding window to create sequences
-    # For each time step, we create a window of the previous 'window_size' time
+
     def create_dataset(dataset, window_size):
         X, y = [], []
         for i in range(len(dataset) - window_size):
-            # Input X is the window of ALL features
             X.append(dataset[i:(i + window_size), :])
             
-            # Target y is the NEXT time step's values for ONLY the target columns
             y.append(dataset[i + window_size, target_indices])
         return np.array(X), np.array(y)
 
@@ -66,8 +64,8 @@ def scale_and_create_sequences(df, train_split_ratio=0.8, window_size=48):
     X_test, y_test = create_dataset(test_data, window_size)
 
     print("Training and testing sequences created for MULTI-OUTPUT model.")
-    print(f"X_train shape: {X_train.shape}") # e.g., (samples, 48, 17)
-    print(f"y_train shape: {y_train.shape}") # e.g., (samples, 7)
+    print(f"X_train shape: {X_train.shape}") 
+    print(f"y_train shape: {y_train.shape}") 
 
     # Return the main scaler, as it's needed for inverse transforming everything
     return X_train, y_train, X_test, y_test, scaler, df.columns, target_columns

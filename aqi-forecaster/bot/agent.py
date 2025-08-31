@@ -1,18 +1,15 @@
 import os
 import sys
 from langchain_google_genai import ChatGoogleGenerativeAI
-# THIS IS THE LINE YOU NEED TO ADD
 from langchain.agents import tool, AgentExecutor, create_react_agent
 from langchain_core.prompts import PromptTemplate
 from dotenv import load_dotenv 
 load_dotenv() 
-# Add the parent directory to the system path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Import our custom tool from the tools.py file
 from bot.tools import get_forecast
 
-# --- 1. Define the Tools Available to the Agent ---
 @tool
 def forecast_air_quality(horizon_hours: int) -> dict:
     """
@@ -24,7 +21,6 @@ def forecast_air_quality(horizon_hours: int) -> dict:
 
 tools = [forecast_air_quality]
 
-# --- 2. Create the Agent ---
 def create_agent():
     """
     Creates and configures the LangChain agent, combining the LLM, tools, and a prompt.
@@ -56,10 +52,8 @@ def create_agent():
     
     prompt = PromptTemplate.from_template(prompt_template)
     
-    # Create the core agent logic
     agent = create_react_agent(llm, tools, prompt)
     
-    # The AgentExecutor runs the agent
     agent_executor = AgentExecutor(
         agent=agent, 
         tools=tools, 
